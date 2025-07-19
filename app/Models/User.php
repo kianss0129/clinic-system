@@ -13,6 +13,8 @@ use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Auth\Passwords\CanResetPassword as CanResetPasswordTrait;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Auth\Notifications\ResetPassword;
+use Illuminate\Support\Facades\Log;
+use App\Notifications\ResetPasswordNotification;
 
 class User extends Authenticatable implements MustVerifyEmail, CanResetPassword
 {
@@ -50,10 +52,14 @@ class User extends Authenticatable implements MustVerifyEmail, CanResetPassword
     }
 
     /**
-     * Send the password reset notification email.
+     * Send the password reset notification.
+     *
+     * @param  string  $token
+     * @return void
      */
     public function sendPasswordResetNotification($token)
     {
-        $this->notify(new ResetPassword($token));
+        \Log::info("Custom reset email for: {$this->email}");
+    $this->notify(new ResetPasswordNotification($token));
     }
 }

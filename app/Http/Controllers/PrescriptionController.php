@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use Illuminate\Support\Facades\Auth; 
 use App\Models\Prescription;
 use App\Models\MedicalRecord;
 use App\Models\Billing;
@@ -101,4 +101,16 @@ class PrescriptionController extends Controller
             ->route('doctor.prescriptions.index')
             ->with('success', '🗑️ Prescription deleted successfully.');
     }
+ public function patientPrescriptions()
+{
+    $prescriptions = Prescription::with(['doctor', 'medicalRecord'])
+        ->where('patient_id', Auth::id())
+        ->latest()
+        ->get();
+
+    return inertia('Patient/Prescriptions', [ // ✅ this must match the actual .vue file path
+        'prescriptions' => $prescriptions
+    ]);
 }
+}
+    

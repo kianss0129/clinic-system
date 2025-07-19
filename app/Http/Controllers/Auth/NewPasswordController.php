@@ -6,10 +6,14 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
 
 class NewPasswordController extends Controller
 {
+    /**
+     * Show the password reset form with token + email.
+     */
     public function create(Request $request)
     {
         return Inertia::render('Auth/ResetPassword', [
@@ -18,8 +22,13 @@ class NewPasswordController extends Controller
         ]);
     }
 
+    /**
+     * Handle the password reset request.
+     */
     public function store(Request $request)
     {
+        Log::info('🔁 Reset Password Data:', $request->all());
+
         $request->validate([
             'token' => 'required',
             'email' => 'required|email',

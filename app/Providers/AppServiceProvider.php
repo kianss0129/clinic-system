@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Providers;
-
+use Inertia\Inertia;
 use Illuminate\Support\ServiceProvider;
 use Spatie\Permission\Middlewares\RoleMiddleware;
 use Illuminate\Support\Facades\Password;
@@ -25,8 +25,13 @@ class AppServiceProvider extends ServiceProvider
     /**
      * Bootstrap any application services.
      */
-    public function boot(): void
-    {
-        //
-    }
+   public function boot(): void
+{
+    Inertia::share([
+        'auth' => fn () => [
+            'user' => Auth::user() ? Auth::user()->load('roles') : null,
+            'csrf_token' => csrf_token(),
+        ],
+    ]);
+}
 }
