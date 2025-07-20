@@ -4,7 +4,7 @@ import InputError from '@/Components/InputError.vue'
 import InputLabel from '@/Components/InputLabel.vue'
 import PrimaryButton from '@/Components/PrimaryButton.vue'
 import TextInput from '@/Components/TextInput.vue'
-import { onMounted } from 'vue'
+import { onMounted, ref } from 'vue'
 
 const form = useForm({
   name: '',
@@ -14,25 +14,28 @@ const form = useForm({
   'g-recaptcha-response': '',
 })
 
+const recaptchaElement = ref(null); // Reference for the reCAPTCHA div element
+
 const submit = () => {
   form.post(route('register.patient'), {
     onFinish: () => {
       form.reset('password', 'password_confirmation', 'g-recaptcha-response')
-      grecaptcha.reset()
+      grecaptcha.reset() // Reset the reCAPTCHA after form submission
     },
   })
 }
 
 onMounted(() => {
-  if (typeof grecaptcha !== 'undefined') {
-    grecaptcha.ready(() => {
-      grecaptcha.render('captcha', {
-        sitekey: import.meta.env.VITE_RECAPTCHA_SITE_KEY,
-        callback: (response) => {
-          form['g-recaptcha-response'] = response
-        },
-      })
-    })
+  // Ensure grecaptcha is loaded and the element is available
+  if (typeof grecaptcha !== 'undefined' && recaptchaElement.value) {
+    grecaptcha.ready(function () {
+      grecaptcha.render(recaptchaElement.value, {
+        sitekey: import.meta.env.VITE_RECAPTCHA_SITE_KEY, // Use your site key here
+        callback: function(response) {
+          form['g-recaptcha-response'] = response; // Set the response token to form
+        }
+      });
+    });
   }
 })
 </script>
@@ -70,9 +73,9 @@ onMounted(() => {
         <InputError :message="form.errors.password_confirmation" class="mt-2" />
       </div>
 
-      <!-- ✅ CAPTCHA -->
-      <div id="captcha" class="my-4"></div>
-      <p v-if="form.errors['g-recaptcha-response']" class="text-xs text-red-600">
+      <!-- ✅ reCAPTCHA -->
+      <div ref="recaptchaElement" class="my-4"></div>
+      <p v-if="form.errors['g-recaptcha-response']" class="text-xs text-red-600 mt-2">
         {{ form.errors['g-recaptcha-response'] }}
       </p>
 

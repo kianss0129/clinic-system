@@ -58,6 +58,16 @@ function markAsPaid(id) {
     }
   })
 }
+
+// Delete bill
+function deleteBilling(id) {
+  if (confirm('Are you sure you want to delete this billing record?')) {
+    router.delete(`/billing/${id}`, {
+      preserveScroll: true,
+      onSuccess: () => alert('Billing record deleted successfully.')
+    })
+  }
+}
 </script>
 
 <template>
@@ -103,6 +113,7 @@ function markAsPaid(id) {
           <th class="border px-4 py-2">Patient</th>
           <th class="border px-4 py-2">Amount</th>
           <th class="border px-4 py-2">Status</th>
+          <th class="border px-4 py-2">Actions</th>
         </tr>
       </thead>
       <tbody>
@@ -120,12 +131,20 @@ function markAsPaid(id) {
             >
               {{ bill.status }}
             </span>
+          </td>
+          <td class="border px-4 py-2 flex gap-2">
             <button
               v-if="bill.status !== 'Paid'"
               @click="markAsPaid(bill.id)"
-              class="ml-2 bg-green-500 text-white px-2 py-1 rounded text-sm hover:bg-green-600"
+              class="bg-green-500 text-white px-2 py-1 rounded text-sm hover:bg-green-600"
             >
               Mark as Paid
+            </button>
+            <button
+              @click="deleteBilling(bill.id)"
+              class="bg-red-600 text-white px-2 py-1 rounded text-sm hover:bg-red-700"
+            >
+              Delete
             </button>
           </td>
         </tr>

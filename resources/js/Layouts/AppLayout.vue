@@ -4,7 +4,7 @@ import { Head, usePage, router } from '@inertiajs/vue3';
 import Banner from '@/Components/Banner.vue';
 
 defineProps({
-    title: String,
+  title: String,
 });
 
 const showingNavigationDropdown = ref(false);
@@ -12,16 +12,24 @@ const page = usePage();
 const flashMessage = ref('');
 
 onMounted(() => {
+  // ✅ Flash message timeout
   if (page.props.flash?.success) {
     flashMessage.value = page.props.flash.success;
     setTimeout(() => {
       flashMessage.value = '';
     }, 4000);
   }
+
+  // ✅ Dynamically load Google reCAPTCHA script
+  const recaptchaScript = document.createElement('script');
+  recaptchaScript.src = 'https://www.google.com/recaptcha/api.js';
+  recaptchaScript.async = true;
+  recaptchaScript.defer = true;
+  document.head.appendChild(recaptchaScript);
 });
 
 const logout = () => {
-    router.post(route('logout'));
+  router.post(route('logout'));
 };
 </script>
 
@@ -46,12 +54,8 @@ const logout = () => {
               <span class="text-sm text-gray-700">
                 {{ page.props.auth.user.name }}
               </span>
-              <button
-                @click="logout"
-                class="text-red-600 hover:text-red-800 text-sm underline"
-              >
-                Logout
-              </button>
+              <!-- Optional: Add logout button -->
+              
             </div>
           </div>
         </div>

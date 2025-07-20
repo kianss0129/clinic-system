@@ -24,15 +24,21 @@ class RegisteredUserController extends Controller
             'password' => ['required', 'confirmed', 'min:8'],
         ]);
 
-        $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-        ]);
+        $user = $this->createUser($request);
 
         event(new Registered($user));
         auth()->login($user);
 
         return redirect('/dashboard');
+    }
+
+    /** Create the user */
+    protected function createUser($request)
+    {
+        return User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
+        ]);
     }
 }

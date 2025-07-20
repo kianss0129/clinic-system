@@ -85,5 +85,11 @@ public function patientIndex()
         'billings' => $billings,
     ]);
 }
+public function destroy(Billing $billing)
+{
+    $billing->delete();
+    return back()->with('success', 'Billing record deleted successfully.');
+}
+
 
 }

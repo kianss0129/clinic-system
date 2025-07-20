@@ -96,6 +96,9 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
         Route::get('/billing/pdf/export', [BillingController::class, 'exportPDF'])->name('billing.exportPDF');
        Route::get('/roles', [RoleController::class, 'index'])->name('roles.index');
     Route::post('/roles/assign', [RoleController::class, 'assign'])->name('roles.assign');
+    Route::delete('/roles/{user}', [RoleController::class, 'remove'])->name('roles.remove');
+    Route::delete('/billing/{billing}', [BillingController::class, 'destroy'])->name('billing.destroy');
+
     });
 
     // ✅ Doctor Routes

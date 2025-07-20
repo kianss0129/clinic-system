@@ -1,8 +1,18 @@
 <script setup>
-import { Link } from '@inertiajs/vue3';
-import dayjs from 'dayjs'; // Make sure dayjs is installed (npm install dayjs)
+import { Link, router } from '@inertiajs/vue3'
+import dayjs from 'dayjs'
 
-defineProps(['records']);
+defineProps(['records'])
+
+const formatDate = (date) => {
+  return dayjs(date).format('MMM DD, YYYY')
+}
+
+const deleteRecord = (id) => {
+  if (confirm('Are you sure you want to delete this medical record?')) {
+    router.delete(route('medical-records.destroy', id))
+  }
+}
 </script>
 
 <template>
@@ -39,7 +49,13 @@ defineProps(['records']);
               >
                 Edit
               </Link>
-              <!-- Uncomment if you add View button -->
+              <button
+                @click="deleteRecord(record.id)"
+                class="text-red-600 hover:underline"
+              >
+                Delete
+              </button>
+              <!-- Optional: View button -->
               <!--
               <Link
                 :href="route('prescriptions.show', record.latest_prescription_id)"
@@ -55,9 +71,3 @@ defineProps(['records']);
     </div>
   </div>
 </template>
-
-<script>
-function formatDate(date) {
-  return dayjs(date).format('MMM DD, YYYY');
-}
-</script>
