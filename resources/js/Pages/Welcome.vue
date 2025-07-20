@@ -24,7 +24,7 @@ defineProps({
         class="mx-auto mb-6 w-28 h-28 object-contain"
         v-if="true" 
       />
-      <h1 class="text-4xl font-bold mb-6">Welcome to Clinic System</h1>
+      <h1 class="text-4xl font-bold mb-6">Welcome to OnClique</h1>
 
       <!-- Buttons -->
       <div class="space-x-6">
