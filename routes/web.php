@@ -24,18 +24,34 @@ use App\Http\Controllers\Patient\PatientAppointmentController;
 |----------------------------------------------------------------------
 */
 
+<<<<<<< HEAD
+=======
+// Forgot password form
+>>>>>>> 589a8be438392415337ae1288d8ce1280d106ff1
 Route::get('/forgot-password', [PasswordResetLinkController::class, 'create'])
     ->middleware('guest')
     ->name('password.request');
 
+<<<<<<< HEAD
+=======
+// Send reset email
+>>>>>>> 589a8be438392415337ae1288d8ce1280d106ff1
 Route::post('/forgot-password', [PasswordResetLinkController::class, 'store'])
     ->middleware('guest')
     ->name('password.email');
 
+<<<<<<< HEAD
+=======
+// Reset password form
+>>>>>>> 589a8be438392415337ae1288d8ce1280d106ff1
 Route::get('/reset-password/{token}', [NewPasswordController::class, 'create'])
     ->middleware('guest')
     ->name('password.reset');
 
+<<<<<<< HEAD
+=======
+// Handle new password submission
+>>>>>>> 589a8be438392415337ae1288d8ce1280d106ff1
 Route::post('/reset-password', [NewPasswordController::class, 'store'])
     ->middleware('guest')
     ->name('password.update');
@@ -127,7 +143,11 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
         Route::post('/appointments/{appointment}/cancel', [PatientAppointmentController::class, 'cancel'])
             ->name('appointments.cancel');
         Route::get('/records', [MedicalRecordController::class, 'index'])->name('patient.records');
+<<<<<<< HEAD
         //Route::get('/prescriptions', [PrescriptionController::class, 'patientPrescriptions'])->name('patient.prescriptions');
+=======
+        Route::get('/prescriptions', [PrescriptionController::class, 'patientPrescriptions'])->name('patient.prescriptions');
+>>>>>>> 589a8be438392415337ae1288d8ce1280d106ff1
         Route::get('/billings', [BillingController::class, 'patientIndex'])->name('patient.billings');
 
         Route::get('/support', function () {
