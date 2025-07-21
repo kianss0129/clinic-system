@@ -1,5 +1,7 @@
 <?php
 
+// app/Http/Controllers/DashboardController.php
+
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
@@ -15,7 +17,7 @@ class DashboardController extends Controller
         } elseif ($user->hasRole('Doctor')) {
             return redirect()->route('doctor.appointments');
         } elseif ($user->hasRole('Patient')) {
-            return redirect()->route('patient.appointments');
+            return redirect()->route('patient.dashboard'); // ✅ Change here
         } else {
             abort(403, 'Unauthorized');
         }

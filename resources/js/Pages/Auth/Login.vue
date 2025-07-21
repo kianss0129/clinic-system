@@ -1,12 +1,12 @@
 <script setup>
 import { Head, Link, useForm } from '@inertiajs/vue3'
-import AuthenticationCard        from '@/Components/AuthenticationCard.vue'
-import AuthenticationCardLogo    from '@/Components/AuthenticationCardLogo.vue'
-import Checkbox                  from '@/Components/Checkbox.vue'
-import InputError                from '@/Components/InputError.vue'
-import InputLabel                from '@/Components/InputLabel.vue'
-import PrimaryButton             from '@/Components/PrimaryButton.vue'
-import TextInput                 from '@/Components/TextInput.vue'
+import AuthenticationCard from '@/Components/AuthenticationCard.vue'
+import AuthenticationCardLogo from '@/Components/AuthenticationCardLogo.vue'
+import Checkbox from '@/Components/Checkbox.vue'
+import InputError from '@/Components/InputError.vue'
+import InputLabel from '@/Components/InputLabel.vue'
+import PrimaryButton from '@/Components/PrimaryButton.vue'
+import TextInput from '@/Components/TextInput.vue'
 
 defineProps({
   canResetPassword: Boolean,
@@ -33,15 +33,18 @@ const submit = () => {
 
 <template>
   <Head title="Log in" />
+
   <AuthenticationCard>
     <template #logo>
       <AuthenticationCardLogo />
     </template>
 
+    <!-- Status Message -->
     <div v-if="status" class="mb-4 font-medium text-sm text-green-600">
       {{ status }}
     </div>
 
+    <!-- Login Form -->
     <form @submit.prevent="submit">
       <!-- Email -->
       <div>
@@ -81,9 +84,10 @@ const submit = () => {
       </div>
 
       <!-- Footer Actions -->
-      <div class="flex items-center justify-between mt-4">
-        <div class="flex gap-4 items-center">
-          <!-- Forgot Password Link -->
+      <div class="mt-6 space-y-4">
+        <!-- Links -->
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+          <!-- Forgot Password -->
           <Link
             :href="route('password.request')"
             class="underline text-sm text-gray-600 hover:text-gray-900"
@@ -101,12 +105,15 @@ const submit = () => {
         </div>
 
         <!-- Login Button -->
-        <PrimaryButton
-          :class="{ 'opacity-25': form.processing }"
-          :disabled="form.processing"
-        >
-          Log in
-        </PrimaryButton>
+        <div>
+          <PrimaryButton
+            class="w-full justify-center"
+            :class="{ 'opacity-25': form.processing }"
+            :disabled="form.processing"
+          >
+            Log in
+          </PrimaryButton>
+        </div>
       </div>
     </form>
   </AuthenticationCard>

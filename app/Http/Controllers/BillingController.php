@@ -73,4 +73,23 @@ class BillingController extends Controller
         $pdf = Pdf::loadView('pdf.billings', compact('billings'));
         return $pdf->download('billing-summary.pdf');
     }
+    // ✅ Show billing for the currently logged-in patient
+public function patientIndex()
+{
+    $billings = Billing::with('appointment')
+        ->where('patient_id', auth()->id())
+        ->latest()
+        ->get();
+
+    return inertia('Patient/Billings', [
+        'billings' => $billings,
+    ]);
+}
+public function destroy(Billing $billing)
+{
+    $billing->delete();
+    return back()->with('success', 'Billing record deleted successfully.');
+}
+
+
 }

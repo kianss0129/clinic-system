@@ -9,15 +9,15 @@ const { medicalRecord, patients, doctors, appointments } = defineProps({
 })
 
 const form = useForm({
-  patient_id:      medicalRecord.patient_id,
-  doctor_id:       medicalRecord.doctor_id,
-  appointment_id:  medicalRecord.appointment_id,
-  diagnosis:       medicalRecord.diagnosis,
-  notes:           medicalRecord.notes,
-  record_date:     medicalRecord.record_date,
+  patient_id: medicalRecord.patient_id || '',
+  doctor_id: medicalRecord.doctor_id || '',
+  appointment_id: medicalRecord.appointment_id || '',
+  diagnosis: medicalRecord.diagnosis || '',
+  notes: medicalRecord.notes || '',
+  record_date: medicalRecord.record_date || new Date().toISOString().slice(0, 10),
 })
 
-function submit () {
+function submit() {
   form.put(route('doctor.records.update', medicalRecord.id))
 }
 </script>
@@ -25,9 +25,7 @@ function submit () {
 <template>
   <div class="p-6 max-w-3xl mx-auto">
     <h1 class="text-2xl font-bold mb-6">Edit Medical Record</h1>
-
     <form @submit.prevent="submit" class="space-y-4">
-      <!-- Patient -->
       <div>
         <label class="block mb-1 font-medium">Patient</label>
         <select v-model="form.patient_id" class="w-full border rounded p-2">
@@ -40,7 +38,6 @@ function submit () {
         </p>
       </div>
 
-      <!-- Doctor -->
       <div>
         <label class="block mb-1 font-medium">Doctor</label>
         <select v-model="form.doctor_id" class="w-full border rounded p-2">
@@ -53,15 +50,10 @@ function submit () {
         </p>
       </div>
 
-      <!-- Appointment -->
       <div>
         <label class="block mb-1 font-medium">Appointment</label>
         <select v-model="form.appointment_id" class="w-full border rounded p-2">
-          <option
-            v-for="a in appointments"
-            :key="a.id"
-            :value="a.id"
-          >
+          <option v-for="a in appointments" :key="a.id" :value="a.id">
             {{ a.patient?.name }} – {{ a.appointment_date }}
           </option>
         </select>
@@ -70,52 +62,32 @@ function submit () {
         </p>
       </div>
 
-      <!-- Diagnosis -->
       <div>
         <label class="block mb-1 font-medium">Diagnosis</label>
-        <input
-          v-model="form.diagnosis"
-          type="text"
-          class="w-full border rounded p-2"
-        />
+        <input v-model="form.diagnosis" type="text" class="w-full border rounded p-2" />
         <p v-if="form.errors.diagnosis" class="text-xs text-red-600 mt-1">
           {{ form.errors.diagnosis }}
         </p>
       </div>
 
-      <!-- Notes -->
       <div>
         <label class="block mb-1 font-medium">Notes</label>
-        <textarea
-          v-model="form.notes"
-          rows="4"
-          class="w-full border rounded p-2"
-        />
+        <textarea v-model="form.notes" rows="4" class="w-full border rounded p-2" />
         <p v-if="form.errors.notes" class="text-xs text-red-600 mt-1">
           {{ form.errors.notes }}
         </p>
       </div>
 
-      <!-- Record date -->
       <div>
-        <label class="block mb-1 font-medium">Record Date</label>
-        <input
-          v-model="form.record_date"
-          type="date"
-          class="w-full border rounded p-2"
-        />
+        <label class="block mb-1 font-medium">Record Date</label>
+        <input v-model="form.record_date" type="date" class="w-full border rounded p-2" />
         <p v-if="form.errors.record_date" class="text-xs text-red-600 mt-1">
           {{ form.errors.record_date }}
         </p>
       </div>
 
-      <!-- Submit -->
       <div class="text-right">
-        <button
-          type="submit"
-          class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded disabled:opacity-50"
-          :disabled="form.processing"
-        >
+        <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded disabled:opacity-50" :disabled="form.processing">
           Update
         </button>
       </div>

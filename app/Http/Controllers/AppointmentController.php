@@ -111,4 +111,22 @@ class AppointmentController extends Controller
 
         return back()->with('success', '✅ Appointment confirmed successfully.');
     }
+
+public function cancel($id)
+{
+    $appointment = Appointment::findOrFail($id);
+
+    // Only the patient who booked the appointment can cancel it
+    if (auth()->user()->id !== $appointment->patient_id) {
+        abort(403, 'Unauthorized');
+    }
+
+    $appointment->update([
+        'status' => 'cancelled',
+    ]);
+
+    return back()->with('success', 'Appointment cancelled.');
+}
+
+
 }

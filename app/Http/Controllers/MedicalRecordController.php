@@ -14,26 +14,32 @@ class MedicalRecordController extends Controller
     | 1) LIST
     ──────────────────────────────────────────────────────────────*/
     public function index()
-    {
-        $user = auth()->user();
+{
+    $user = auth()->user();
 
-        // Doctors see only their accepted / confirmed patients
-        if ($user->hasRole('Doctor')) {
-            $allowedPatientIds = Appointment::where('doctor_id', $user->id)
-                ->whereIn('status', ['accepted', 'confirmed'])
-                ->pluck('patient_id');
+    if ($user->hasRole('Doctor')) {
+        // Doctors see only their accepted/confirmed patients' records
+        $allowedPatientIds = Appointment::where('doctor_id', $user->id)
+            ->whereIn('status', ['accepted', 'confirmed'])
+            ->pluck('patient_id');
 
-            $records = MedicalRecord::with(['patient', 'doctor'])
-                ->where('doctor_id', $user->id)
-                ->whereIn('patient_id', $allowedPatientIds)
-                ->get();
-        } else {
-            // Admins & Super Admins see everything
-            $records = MedicalRecord::with(['patient', 'doctor'])->get();
-        }
-
-        return Inertia::render('MedicalRecords/Index', compact('records'));
+        $records = MedicalRecord::with(['patient', 'doctor'])
+            ->where('doctor_id', $user->id)
+            ->whereIn('patient_id', $allowedPatientIds)
+            ->get();
+    } else if ($user->hasRole('Patient')) {
+        // Patients can only see their own records
+        $records = MedicalRecord::with(['patient', 'doctor'])
+            ->where('patient_id', $user->id)
+            ->get();
+    } else {
+        // Admins or Super Admins see all records (if applicable)
+        $records = MedicalRecord::with(['patient', 'doctor'])->get();
     }
+
+    return Inertia::render('MedicalRecords/Index', compact('records'));
+}
+
 
     /*──────────────────────────────────────────────────────────────
     | 2) CREATE  (form data)
@@ -133,4 +139,6 @@ class MedicalRecordController extends Controller
 
         return back()->with('success', '🗑️ Medical record deleted successfully.');
     }
+
+    
 }

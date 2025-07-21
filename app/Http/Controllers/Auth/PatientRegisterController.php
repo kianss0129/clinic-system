@@ -12,14 +12,13 @@ use Inertia\Inertia;
 
 class PatientRegisterController extends Controller
 {
-    /**  Show the custom patient‑only sign‑up page. */
+    /** Show the custom patient‑only sign‑up page. */
     public function create()
     {
-        // resources/js/Pages/Auth/PatientRegister.vue
         return Inertia::render('Auth/PatientRegister');
     }
 
-    /**  Handle the submission. */
+    /** Handle the submission. */
     public function store(Request $request)
     {
         // ---------- 1. Validate ------------------------------------------------
@@ -36,13 +35,7 @@ class PatientRegisterController extends Controller
         $validated = $request->validate($rules);
 
         // ---------- 2. Create user & role -------------------------------------
-        $user = User::create([
-            'name'     => $validated['name'],
-            'email'    => $validated['email'],
-            'password' => Hash::make($validated['password']),
-        ]);
-
-        $user->assignRole('Patient');
+        $user = $this->createUser($validated);
 
         // ---------- 3. Fire “Registered” (so Jetstream emails verify link) ----
         event(new Registered($user));
@@ -53,4 +46,19 @@ class PatientRegisterController extends Controller
         // ---------- 5. Send them to the verify‑email screen, **not** login ----
         return redirect()->route('verification.notice');
     }
+
+    /** Create the user and assign role */
+    protected function createUser($validated)
+    {
+        $user = User::create([
+            'name'     => $validated['name'],
+            'email'    => $validated['email'],
+            'password' => Hash::make($validated['password']),
+        ]);
+
+        $user->assignRole('Patient'); // Assign 'Patient' role
+
+        return $user;
+    }
 }
+
